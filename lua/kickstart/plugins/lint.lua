@@ -1,12 +1,28 @@
 return {
-
   { -- Linting
     'mfussenegger/nvim-lint',
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
       local lint = require 'lint'
       lint.linters_by_ft = {
-        markdown = { 'markdownlint' },
+        -- markdown = { 'markdownlint' },
+        typescript = { 'eslint_d', 'eslint' },
+        javascript = { 'eslint_d', 'eslint' },
+        typescriptreact = { 'eslint_d', 'eslint' },
+        javascriptreact = { 'eslint_d', 'eslint' },
+      }
+
+      local eslint = lint.linters.eslint_d
+
+      eslint.args = {
+        '--no-warn-ignored',
+        '--format',
+        'json',
+        '--stdin',
+        '--stdin-filename',
+        function()
+          return vim.api.nvim_buf_get_name(0)
+        end,
       }
 
       -- To allow other plugins to add linters to require('lint').linters_by_ft,
@@ -47,7 +63,7 @@ return {
       vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
         group = lint_augroup,
         callback = function()
-          require('lint').try_lint()
+          lint.try_lint()
         end,
       })
     end,

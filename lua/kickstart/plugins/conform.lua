@@ -1,7 +1,9 @@
+-- Autoformat
 return {
-  { -- Autoformat
+  {
     'stevearc/conform.nvim',
-    lazy = false,
+    event = { 'BufWritePre' },
+    cmd = { 'ConformInfo' },
     keys = {
       {
         '<leader>cf',
@@ -31,18 +33,30 @@ return {
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        javascript = { { 'prettier' } },
-        typescript = { { 'prettier' } },
-        typescriptreact = { { 'prettier' } },
-        javascriptreact = { { 'prettier' } },
-        json = { { 'prettier' } },
-        jsonc = { { 'prettier' } },
-        markdown = { { 'prettier' } },
-        css = { { 'prettier' } },
-        scss = { { 'prettier' } },
-        html = { { 'prettier' } },
+        javascript = { { 'prettier_d', 'prettier' } },
+        typescript = { { 'prettier_d', 'prettier' } },
+        typescriptreact = { { 'prettier_d', 'prettier' } },
+        javascriptreact = { { 'prettier_d', 'prettier' } },
+        json = { { 'prettier_d', 'prettier' } },
+        jsonc = { { 'prettier_d', 'prettier' } },
+        markdown = { { 'prettier_d', 'prettier' } },
+        css = { { 'prettier_d', 'prettier' } },
+        scss = { { 'prettier_d', 'prettier' } },
+        html = { { 'prettier_d', 'prettier' } },
+      },
+      formatters = {
+        prettier = {
+          prepend_args = { '--prose-wrap', 'always' },
+        },
+        shfmt = {
+          prepend_args = { '-i', '2' },
+        },
       },
     },
+    init = function()
+      -- If you want the formatexpr, here is the place to set it
+      vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+    end,
   },
 }
 

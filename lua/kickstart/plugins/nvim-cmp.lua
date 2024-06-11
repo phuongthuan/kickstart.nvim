@@ -1,5 +1,4 @@
 -- Autocompletion
-
 return {
   'hrsh7th/nvim-cmp',
   event = 'InsertEnter',
@@ -17,13 +16,10 @@ return {
         return 'make install_jsregexp'
       end)(),
       dependencies = {
-        -- `friendly-snippets` contains a variety of premade snippets.
-        --    See the README about individual language/framework/plugin snippets:
-        --    https://github.com/rafamadriz/friendly-snippets
         {
           'rafamadriz/friendly-snippets',
           config = function()
-            require('luasnip.loaders.from_vscode').lazy_load { paths = { '~/.dotfiles/nvim/snippets' } }
+            require('luasnip.loaders.from_vscode').lazy_load { paths = { require('env').dotfiles_path .. '/snippets' } }
           end,
         },
       },
@@ -38,15 +34,18 @@ return {
     'hrsh7th/cmp-path',
   },
   config = function()
-    -- See `:help cmp`
     local cmp = require 'cmp'
     local luasnip = require 'luasnip'
-    luasnip.config.setup {}
+    local lspkind = require 'lspkind'
+
+    luasnip.config.setup()
 
     local has_words_before = function()
-      unpack = unpack or table.unpack
+      if vim.api.nvim_buf_get_option(0, 'buftype') == 'prompt' then
+        return false
+      end
       local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-      return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match '%s' == nil
+      return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match '^%s*$' == nil
     end
 
     cmp.setup {
@@ -56,12 +55,13 @@ return {
         end,
       },
       completion = { completeopt = 'menu,menuone,noinsert' },
-
-      -- For an understanding of why these mappings were
-      -- chosen, you will need to read `:help ins-completion`
-      --
-      -- No, but seriously. Please read `:help ins-completion`, it is really good!
-      mapping = cmp.mapping.preset.insert {
+      mapping = {
+        ['<C-p>'] = cmp.mapping.select_prev_item(),
+        ['<C-n>'] = cmp.mapping.select_next_item(),
+        ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+        ['<C-e>'] = cmp.mapping.close(),
         ['<CR>'] = cmp.mapping(function(fallback)
           if cmp.visible() then
             if luasnip.expandable() then
@@ -77,9 +77,7 @@ return {
         end),
         ['<Tab>'] = cmp.mapping(function(fallback)
           if cmp.visible() then
-            cmp.select_next_item()
-            -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-            -- this way you will only jump inside the snippet region
+            cmp.select_next_item { behavior = cmp.SelectBehavior.Insert }
           elseif luasnip.expand_or_jumpable() then
             luasnip.expand_or_jump()
           elseif has_words_before() then
@@ -90,7 +88,7 @@ return {
         end, { 'i', 's' }),
         ['<S-Tab>'] = cmp.mapping(function(fallback)
           if cmp.visible() then
-            cmp.select_prev_item()
+            cmp.select_prev_item { behavior = cmp.SelectBehavior.Insert }
           elseif luasnip.jumpable(-1) then
             luasnip.jump(-1)
           else
@@ -98,11 +96,73 @@ return {
           end
         end, { 'i', 's' }),
       },
+      formatting = {
+        format = lspkind.cmp_format {
+          mode = 'symbol',
+          max_width = 50,
+          symbol_map = {
+            Text = '󰉿',
+            Method = '󰆧',
+            Function = '󰊕',
+            Constructor = '',
+            Field = '󰜢',
+            Variable = '󰀫',
+            Class = '󰠱',
+            Interface = '',
+            Module = '',
+            Property = '󰜢',
+            Unit = '󰑭',
+            Value = '󰎠',
+            Enum = '',
+            Keyword = '󰌋',
+            Snippet = '',
+            Color = '󰏘',
+            File = '󰈙',
+            Reference = '󰈇',
+            Folder = '󰉋',
+            EnumMember = '',
+            Constant = '󰏿',
+            Struct = '󰙅',
+            Event = '',
+            Operator = '󰆕',
+            Copilot = '',
+            TypeParameter = '',
+          },
+          before = function(entry, vim_item)
+            vim_item.menu = ({
+              nvim_lsp = ' [LSP]',
+              buffer = ' [Buffer]',
+              path = ' [Path]',
+              luasnip = ' [Snippet]',
+            })[entry.source.name]
+            return vim_item
+          end,
+        },
+      },
+      sorting = {
+        priority_weight = 2,
+        comparators = {
+          require('copilot_cmp.comparators').prioritize,
+
+          -- Below is the default comparitor list and order for nvim-cmp
+          cmp.config.compare.offset,
+          -- cmp.config.compare.scopes, --this is commented in nvim-cmp too
+          cmp.config.compare.exact,
+          cmp.config.compare.score,
+          cmp.config.compare.recently_used,
+          cmp.config.compare.locality,
+          cmp.config.compare.kind,
+          cmp.config.compare.sort_text,
+          cmp.config.compare.length,
+          cmp.config.compare.order,
+        },
+      },
       sources = {
-        { name = 'nvim_lsp' },
-        { name = 'luasnip' },
-        { name = 'path' },
-        { name = 'emoji' },
+        { name = 'copilot', group_index = 2 },
+        { name = 'nvim_lsp', group_index = 2 },
+        { name = 'luasnip', group_index = 2 },
+        { name = 'path', group_index = 2 },
+        { name = 'emoji', group_index = 2 },
       },
     }
   end,

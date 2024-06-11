@@ -1,5 +1,6 @@
 return { -- Collection of various small independent plugins/modules
   'echasnovski/mini.nvim',
+  version = false,
   config = function()
     -- Better Around/Inside textobjects
     --
@@ -8,6 +9,10 @@ return { -- Collection of various small independent plugins/modules
     --  - yinq - [Y]ank [I]nside [N]ext [']quote
     --  - ci'  - [C]hange [I]nside [']quote
     require('mini.ai').setup { n_lines = 500 }
+    require('mini.pairs').setup()
+    require('mini.starter').setup()
+    require('mini.statusline').setup()
+    require('mini.notify').setup()
 
     -- Simple and easy statusline.
     --  You could remove this setup call if you don't like it,
