@@ -6,11 +6,6 @@ return {
   { 'tpope/vim-endwise' },
   { 'mg979/vim-visual-multi', branch = 'master' },
   { 'kylechui/nvim-surround', opts = {} },
-  { 'ThePrimeagen/harpoon', opts = {
-    menu = {
-      width = 100,
-    },
-  } },
   {
     'folke/flash.nvim',
     event = 'VeryLazy',

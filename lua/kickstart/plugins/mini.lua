@@ -24,10 +24,23 @@ return { -- Collection of various small independent plugins/modules
       return '%2l:%-2v'
     end
 
-    require('mini.bufremove').setup()
+    local bufremove = require 'mini.bufremove'
+    bufremove.setup {}
 
-    -- ... and there is more!
-    --  Check out: https://github.com/echasnovski/mini.nvim
+    vim.keymap.set('n', '<leader>bk', function()
+      local bd = bufremove.delete
+      if vim.bo.modified then
+        local choice = vim.fn.confirm(('Save changes to %q?'):format(vim.fn.bufname()), '&Yes\n&No\n&Cancel')
+        if choice == 1 then -- Yes
+          vim.cmd.write()
+          bd(0)
+        elseif choice == 2 then -- No
+          bd(0, true)
+        end
+      else
+        bd(0)
+      end
+    end, { desc = '[B]uffer [K]ill' })
   end,
 }
 

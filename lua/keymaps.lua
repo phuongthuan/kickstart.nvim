@@ -95,7 +95,7 @@ map('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 map('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
 map('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
--- map('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
+map('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 -- map('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
@@ -122,7 +122,6 @@ map('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 map('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 -- Plugins keymaps
-
 -- Vim-fugitive
 map('n', '<leader>g', ':G<cr>')
 map('n', '<leader>gp', ':G push origin HEAD<cr>')
@@ -130,15 +129,3 @@ map('n', '<leader>gP', ':G push origin HEAD -f<cr>')
 
 -- Mason
 map('n', '<leader>ms', '<cmd>Mason<cr>')
-
--- Lazy.nvim
-map('n', '<leader>L', '<cmd>Lazy<cr>')
-
--- Harpoon
-map('n', '<C-a>', '<cmd>lua require("harpoon.mark").add_file()<cr>:echo "Added to harpoon !!"<cr>')
-map('n', '<C-e>', '<cmd>lua require("harpoon.ui").toggle_quick_menu()<cr>')
-map('n', '<leader>1', '<cmd>lua require("harpoon.ui").nav_file(1)<cr>')
-map('n', '<leader>2', '<cmd>lua require("harpoon.ui").nav_file(2)<cr>')
-map('n', '<leader>3', '<cmd>lua require("harpoon.ui").nav_file(3)<cr>')
-map('n', '<leader>4', '<cmd>lua require("harpoon.ui").nav_file(4)<cr>')
-map('n', '<leader>5', '<cmd>lua require("harpoon.ui").nav_file(5)<cr>')
