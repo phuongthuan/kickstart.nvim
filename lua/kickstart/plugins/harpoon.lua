@@ -8,7 +8,7 @@ return {
     }
 
     -- Keymaps
-    vim.keymap.set('n', '<C-a>', '<cmd>lua require("harpoon.mark").add_file()<cr>:echo "Added to harpoon !!"<cr>')
+    vim.keymap.set('n', '<C-a>', '<cmd>lua require("harpoon.mark").add_file()<cr>:echo "Bookmarked 🌟"<cr>')
     vim.keymap.set('n', '<C-e>', '<cmd>lua require("harpoon.ui").toggle_quick_menu()<cr>')
     vim.keymap.set('n', '<leader>1', '<cmd>lua require("harpoon.ui").nav_file(1)<cr>')
     vim.keymap.set('n', '<leader>2', '<cmd>lua require("harpoon.ui").nav_file(2)<cr>')

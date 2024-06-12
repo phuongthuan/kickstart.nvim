@@ -55,6 +55,8 @@ require('lazy').setup({
 
   require 'kickstart.plugins.mini',
 
+  require 'kickstart.plugins.lualine',
+
   require 'kickstart.plugins.spectre',
 
   require 'kickstart.plugins.harpoon',
